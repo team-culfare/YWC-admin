@@ -1,6 +1,8 @@
 import { ChangeEvent, useState } from "react";
 import styled from "styled-components";
 import { FileType } from "./types/file";
+import upload from "./api/upload";
+import LoginForm from "./components/LoginForm";
 
 const App = () => {
   const [data, setData] = useState<FileType>({
@@ -9,23 +11,23 @@ const App = () => {
   });
 
   const inputChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.files);
     if (e.target.files) {
-      setData({
-        fileName: e.target.files[0].name,
-        file: e.target.files[0],
-      });
+      if (e.target.files.length === 0) {
+        return;
+      } else {
+        setData({
+          fileName: e.target.files[0].name,
+          file: e.target.files[0],
+        });
+      }
     }
   };
-
-  const submitHandler = async () => {
-    if (data && data.file) {
-      const formData = new FormData();
-      formData.append("name", data.fileName);
-      formData.append("data", data.file);
-      console.log(formData);
-
-      //postFile(formData);
-    } else return;
+  const submitHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    upload(data)
+      .then((e) => console.log(e))
+      .catch((err) => console.log(err));
   };
   return (
     <Container>
@@ -36,14 +38,21 @@ const App = () => {
         </FileInput>
         <Input
           id="data"
-          type="data"
-          accept=".xlsx"
+          type="file"
+          accept=".xlsx, csv"
           onChange={inputChangeHandler}
         />
-        <AttatchButton style={{ width: "70px" }} onClick={submitHandler}>
+
+        <AttatchButton
+          style={{ width: "70px" }}
+          as="button"
+          onClick={submitHandler}
+        >
           전송
         </AttatchButton>
       </UploadContainer>
+
+      <LoginForm />
     </Container>
   );
 };
@@ -59,7 +68,6 @@ const UploadContainer = styled.form`
   flex-direction: column;
   align-items: center;
   margin-top: 80px;
-  height: 70vh;
 `;
 
 const FileInput = styled.label`
@@ -71,7 +79,7 @@ const FileInput = styled.label`
   width: 350px;
 `;
 
-const AttatchButton = styled.button`
+const AttatchButton = styled.div`
   text-align: center;
   font-size: small;
   width: fit-content;
