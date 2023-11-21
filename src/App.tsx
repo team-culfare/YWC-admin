@@ -1,42 +1,45 @@
-import axios from "axios";
 import { ChangeEvent, useState } from "react";
 import styled from "styled-components";
+import { FileType } from "./types/file";
 
 const App = () => {
-  const [fileName, setFileName] = useState("");
-  const [file, setFile] = useState<File>();
+  const [data, setData] = useState<FileType>({
+    fileName: "",
+    file: undefined,
+  });
+
   const inputChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      console.log(e);
-      setFileName(e.target.files[0].name);
-      setFile(e.target.files[0]);
+      setData({
+        fileName: e.target.files[0].name,
+        file: e.target.files[0],
+      });
     }
   };
-  const submitHandler = async () => {
-    if (file) {
-      const formData = new FormData();
-      formData.append("name", fileName);
-      formData.append("file", file);
 
-      await axios
-        .post(import.meta.env.VITE_PUBLIC_API_ENDPOINT, formData)
-        .then((res) => {
-          console.log(res);
-          if (res.data.statusCode !== 201) {
-            alert("유효하지 않은 Request가 존재합니다.");
-          }
-        })
-        .catch((err) => console.log(err));
-    }
+  const submitHandler = async () => {
+    if (data && data.file) {
+      const formData = new FormData();
+      formData.append("name", data.fileName);
+      formData.append("data", data.file);
+      console.log(formData);
+
+      //postFile(formData);
+    } else return;
   };
   return (
     <Container>
       <UploadContainer>
-        <FileInput htmlFor="file">
+        <FileInput htmlFor="data">
           <AttatchButton>🔗UPLOAD</AttatchButton>
-          <AttachedFile>{fileName}</AttachedFile>
+          <AttachedFile>{data.fileName}</AttachedFile>
         </FileInput>
-        <Input type="file" id="file" onChange={inputChangeHandler} />
+        <Input
+          id="data"
+          type="data"
+          accept=".xlsx"
+          onChange={inputChangeHandler}
+        />
         <AttatchButton style={{ width: "70px" }} onClick={submitHandler}>
           전송
         </AttatchButton>
@@ -68,7 +71,7 @@ const FileInput = styled.label`
   width: 350px;
 `;
 
-const AttatchButton = styled.div`
+const AttatchButton = styled.button`
   text-align: center;
   font-size: small;
   width: fit-content;
@@ -79,6 +82,7 @@ const AttatchButton = styled.div`
   color: white;
   font-weight: bold;
   white-space: nowrap;
+  border: none;
 `;
 const Input = styled.input`
   display: none;
