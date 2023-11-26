@@ -14,7 +14,6 @@ const GlobalStyle = createGlobalStyle`
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         background-color: #F6F6F6;;
-        font-family: HSYuji, sans-serif;
     }
 
     &:link, &:visited {
