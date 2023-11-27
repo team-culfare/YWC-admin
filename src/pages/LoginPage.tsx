@@ -7,6 +7,7 @@ import UserIcon from "../assets/User.svg?react";
 const LoginPage = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const nav = useNavigate();
+
   const loginHandler = () => {
     if (inputRef.current) {
       const passwd = inputRef.current.value;
@@ -24,29 +25,21 @@ const LoginPage = () => {
         });
     }
   };
-  const keyPressLogin = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log(e.key);
-    if (e.key === "Enter") {
-      loginHandler();
-    }
-  };
+
   return (
     <Container>
       <UserIcon width="50px" height="50px" />
-      <PassWdInput
-        type="password"
-        placeholder="PASSWORD"
-        onKeyDown={keyPressLogin}
-        ref={inputRef}
-      />
-      <LoginBtn onClick={loginHandler}>Login</LoginBtn>
+      <PassWdInput type="password" placeholder="PASSWORD" ref={inputRef} />
+      <LoginBtn type="submit" onClick={loginHandler}>
+        Login
+      </LoginBtn>
     </Container>
   );
 };
 
 export default LoginPage;
 
-const Container = styled.div`
+const Container = styled.form`
   ${flexBox("column", "center", "center")}
   width: 100%;
 `;
