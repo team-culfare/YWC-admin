@@ -18,9 +18,9 @@ const UploadPage = () => {
 
   useEffect(() => {
     if (!cookies.role || cookies.role != "admin") {
-      //nav("/");
+      nav("/");
     }
-  }, [cookies, nav]);
+  }, [cookies, nav, data]);
 
   const inputChangeHandler = () => {
     const ref = fileInputRef.current;
@@ -34,10 +34,9 @@ const UploadPage = () => {
     }
   };
 
-  const submitHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(data);
+  const submitHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    upload(data)
+    await upload(data)
       .then((response) => {
         if (response.data.code != 2000) {
           alert("code 2000 out");
@@ -47,7 +46,6 @@ const UploadPage = () => {
         }
       })
       .catch((err) => {
-        alert("catch error");
         console.log(err);
       });
     setData(blankData);

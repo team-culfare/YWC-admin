@@ -7,9 +7,7 @@ import UserIcon from "../assets/User.svg?react";
 const LoginPage = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const nav = useNavigate();
-
   const loginHandler = () => {
-    nav("/Upload");
     if (inputRef.current) {
       const passwd = inputRef.current.value;
       signin(passwd)
@@ -25,7 +23,6 @@ const LoginPage = () => {
           console.log(err, "catch 에러");
         });
     }
-    console.log(inputRef.current);
   };
   const keyPressLogin = (e: React.KeyboardEvent<HTMLInputElement>) => {
     console.log(e.key);

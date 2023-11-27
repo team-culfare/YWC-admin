@@ -1,14 +1,23 @@
 import { useCookies } from "react-cookie";
 import signout from "../api/auth/signout";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const SignoutButton = () => {
   const [cookie] = useCookies([`role`]);
+  const nav = useNavigate();
+
   const signOutHandler = () => {
     if (cookie.role === "admin") {
       signout()
-        .then((e) => console.log(e))
-        .catch((e) => console.log(e));
+        .then((respnose) => {
+          if (respnose.data.code !== 2000) {
+            alert("로그아웃 실패");
+          } else {
+            nav("/");
+          }
+        })
+        .catch((err) => console.log(err));
     }
   };
   return (
