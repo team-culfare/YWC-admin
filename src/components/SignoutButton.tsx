@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 const SignoutButton = () => {
-  const [cookie] = useCookies([`role`]);
+  const [cookie, removeCookie] = useCookies([`role`]);
   const nav = useNavigate();
 
   const signOutHandler = () => {
@@ -14,6 +14,7 @@ const SignoutButton = () => {
           if (respnose.data.code !== 2000) {
             alert("로그아웃 실패");
           } else {
+            removeCookie("role", { pathe: "/" });
             nav("/");
           }
         })
