@@ -20,14 +20,15 @@ const UploadPage = () => {
     if (!cookies.role || cookies.role != "admin") {
       nav("/");
     }
-  }, [cookies, nav, data]);
+  }, [cookies]);
 
-  const inputChangeHandler = () => {
-    const ref = fileInputRef.current;
-    if (ref && ref.files && ref.files[0]) {
+  const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const ref = e.target.files ? e.target.files[0] : null;
+    console.log(ref);
+    if (ref) {
       setData({
-        fileName: ref.files[0].name,
-        file: ref.files[0],
+        fileName: ref.name,
+        file: ref,
       });
     } else {
       setData(blankData);
@@ -60,7 +61,9 @@ const UploadPage = () => {
         id="data"
         type="file"
         accept=".xlsx, csv"
-        onChange={inputChangeHandler}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          inputChangeHandler(event)
+        }
         ref={fileInputRef}
       />
       <AttatchButton
